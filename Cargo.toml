@@ -1,0 +1,11 @@
+[package]
+
+name = "stream"
+version = "0.0.0"
+authors = ["Jonathan Reem <jonathan.reem@gmail.com>"]
+
+[[lib]]
+
+name = "stream"
+path = "src/lib.rs"
+
