@@ -9,3 +9,7 @@ authors = ["Jonathan Reem <jonathan.reem@gmail.com>"]
 name = "stream"
 path = "src/lib.rs"
 
+[dependencies.lazy]
+
+git = "https://github.com/reem/rust-lazy"
+
