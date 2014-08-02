@@ -19,7 +19,24 @@ pub struct Stream<T> {
 impl<T: Send + Share> Stream<T> {
     /// Get, and force evaluation of, the value at the front of the Stream.
     pub fn head(&self) -> &T { &*self.head }
+
     /// Get the rest of the stream, skipping the first value.
     pub fn tail(&self) -> Arc<Stream<T>> { self.tail.deref().clone() }
+
+    /// Get an infinite iterator over the contents of the stream.
+    pub fn iter<'a>(&'a self) -> StreamIter<'a, T> {
+        StreamIter { stream: self }
+    }
+}
+
+/// An iterator of references over the contents of a stream.
+pub struct StreamIter<'a, T> { stream: &'a Stream<T> }
+
+impl<'a, T: Send + Share> Iterator<&'a T> for StreamIter<'a, T> {
+    fn next(&mut self) -> Option<&'a T> {
+        let result = self.stream.head();
+        self.stream = &**self.stream.tail;
+        Some(result)
+    }
 }
 
