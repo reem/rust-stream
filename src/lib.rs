@@ -32,6 +32,35 @@ impl<T: Send + Share> Stream<T> {
     }
 }
 
+impl<T: Send + Share + Clone> Stream<T> {
+    /// Create an infinite stream from a function and an initial input.
+    /// The contents of the stream are created like so:
+    ///
+    /// `x`, `f(x)`, `f(f(x))`, `f(f(f(x)))`, etc.
+    pub fn from_fn(x: T, f: fn(T) -> T) -> Stream<T> {
+        Stream {
+            head: Thunk::evaluated(x.clone()),
+            tail: lazy!(Arc::new(Stream::from_fn(f(x), f)))
+        }
+    }
+}
+
+impl<T: Send + Share + Copy> Stream<T> {
+    /// Create an infinite stream from a function and an initial input.
+    /// The contents of the stream are created like so:
+    ///
+    /// `x`, `f(x)`, `f(f(x))`, `f(f(f(x)))`, etc.
+    ///
+    /// This is a specialized version of the function for types
+    /// which are copy instead of clone.
+    pub fn from_fn_copy(x: T, f: fn(T) -> T) -> Stream<T> {
+        Stream {
+            head: Thunk::evaluated(x),
+            tail: lazy!(Arc::new(Stream::from_fn_copy(f(x), f)))
+        }
+    }
+}
+
 /// An iterator of references over the contents of a stream.
 pub struct StreamIter<'a, T> { stream: &'a Stream<T> }
 
