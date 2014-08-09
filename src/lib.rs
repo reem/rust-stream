@@ -7,7 +7,7 @@
 
 #[phase(plugin, link)] extern crate lazy;
 
-use Thunk = lazy::SharedThunk;
+use Thunk = lazy::SyncThunk;
 use std::sync::Arc;
 
 /// An infinite, immutable, shareable lazy stream
@@ -16,7 +16,7 @@ pub struct Stream<T> {
      tail: Thunk<Arc<Stream<T>>>
 }
 
-impl<T: Send + Share> Stream<T> {
+impl<T: Send + Sync> Stream<T> {
     /// Get, and force evaluation of, the value at the front of the Stream.
     #[inline]
     pub fn head(&self) -> &T { &*self.head }
@@ -32,7 +32,7 @@ impl<T: Send + Share> Stream<T> {
     }
 }
 
-impl<T: Send + Share + Clone> Stream<T> {
+impl<T: Send + Sync + Clone> Stream<T> {
     /// Create an infinite stream from a function and an initial input.
     /// The contents of the stream are created like so:
     ///
@@ -45,7 +45,7 @@ impl<T: Send + Share + Clone> Stream<T> {
     }
 }
 
-impl<T: Send + Share + Copy> Stream<T> {
+impl<T: Send + Sync + Copy> Stream<T> {
     /// Create an infinite stream from a function and an initial input.
     /// The contents of the stream are created like so:
     ///
@@ -64,7 +64,7 @@ impl<T: Send + Share + Copy> Stream<T> {
 /// An iterator of references over the contents of a stream.
 pub struct StreamIter<'a, T> { stream: &'a Stream<T> }
 
-impl<'a, T: Send + Share> Iterator<&'a T> for StreamIter<'a, T> {
+impl<'a, T: Send + Sync> Iterator<&'a T> for StreamIter<'a, T> {
     #[inline]
     fn next(&mut self) -> Option<&'a T> {
         let result = self.stream.head();
