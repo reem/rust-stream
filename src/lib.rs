@@ -7,7 +7,7 @@
 
 #[phase(plugin, link)] extern crate lazy;
 
-use Thunk = lazy::SyncThunk;
+use lazy::SyncThunk as Thunk;
 use std::sync::Arc;
 
 /// An infinite, immutable, shareable lazy stream
