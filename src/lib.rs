@@ -62,7 +62,7 @@ impl<T: Send + Sync + Copy> Stream<T> {
 }
 
 /// An iterator of references over the contents of a stream.
-pub struct StreamIter<'a, T> { stream: &'a Stream<T> }
+pub struct StreamIter<'a, T: 'a> { stream: &'a Stream<T> }
 
 impl<'a, T: Send + Sync> Iterator<&'a T> for StreamIter<'a, T> {
     #[inline]
