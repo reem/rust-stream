@@ -1,7 +1,7 @@
 [package]
 
 name = "stream"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jonathan Reem <jonathan.reem@gmail.com>"]
 
 [[lib]]
@@ -9,7 +9,6 @@ authors = ["Jonathan Reem <jonathan.reem@gmail.com>"]
 name = "stream"
 path = "src/lib.rs"
 
-[dependencies.lazy]
-
-git = "https://github.com/reem/rust-lazy"
+[dependencies]
+lazy = "*"
 
